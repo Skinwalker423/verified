@@ -10,6 +10,7 @@ import {
 import Link from "next/link";
 import { Header } from "./header";
 import { Social } from "./social";
+import { BackButton } from "./back-button";
 
 interface CardWrapperProps extends PropsWithChildren {
   headerLabel: string;
@@ -34,11 +35,14 @@ export const CardWrapper = ({
       {showSocial && (
         <CardFooter>
           <Social />
-          <Link href={backButtonHref}>
-            {backButtonLabel}
-          </Link>
         </CardFooter>
       )}
+      <CardFooter>
+        <BackButton
+          href={backButtonHref}
+          label={backButtonLabel}
+        />
+      </CardFooter>
     </Card>
   );
 };
