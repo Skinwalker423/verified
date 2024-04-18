@@ -7,9 +7,9 @@ import {
   CardHeader,
   CardFooter,
 } from "../card";
-import { Button } from "../button";
 import Link from "next/link";
 import { Header } from "./header";
+import { Social } from "./social";
 
 interface CardWrapperProps extends PropsWithChildren {
   headerLabel: string;
@@ -31,10 +31,14 @@ export const CardWrapper = ({
         <Header label={headerLabel} />
       </CardHeader>
       <CardContent>{children}</CardContent>
-      <CardFooter>
-        {showSocial && <p>Socials</p>}
-        <Link href={backButtonHref}>{backButtonLabel}</Link>
-      </CardFooter>
+      {showSocial && (
+        <CardFooter>
+          <Social />
+          <Link href={backButtonHref}>
+            {backButtonLabel}
+          </Link>
+        </CardFooter>
+      )}
     </Card>
   );
 };
