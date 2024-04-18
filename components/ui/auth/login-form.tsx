@@ -54,6 +54,7 @@ export const LoginForm = () => {
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
+                    type='email'
                     placeholder='123@gmail.com'
                     {...field}
                   />
@@ -70,7 +71,11 @@ export const LoginForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input
+                    type='password'
+                    defaultValue={"******"}
+                    {...field}
+                  />
                 </FormControl>
 
                 <FormMessage />
