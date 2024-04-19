@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const loginFormSchema = z.object({
+export const LoginFormSchema = z.object({
   email: z.string().email({
     message: "Email is required",
   }),
@@ -8,3 +8,27 @@ export const loginFormSchema = z.object({
     message: "password required",
   }),
 });
+
+export const RegisterFormSchema = z
+  .object({
+    email: z.string().email({
+      message: "Email is required",
+    }),
+    name: z.string().min(1, {
+      message: "Name must entered",
+    }),
+    password: z.string().min(1, {
+      message: "password required",
+    }),
+    confirmPassword: z.string().min(1, {
+      message: "password required",
+    }),
+  })
+  .refine(
+    ({ password, confirmPassword }) =>
+      password === confirmPassword,
+    {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    }
+  );
