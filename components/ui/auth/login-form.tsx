@@ -15,7 +15,7 @@ import {
 } from "../form";
 import { Input } from "../input";
 import { Button } from "../button";
-import { loginFormSchema } from "@/schemas";
+import { LoginFormSchema } from "@/schemas";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
 import { login } from "@/actions/login";
@@ -25,8 +25,8 @@ export const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState("");
   const [success, setsuccess] = useState("");
-  const form = useForm<z.infer<typeof loginFormSchema>>({
-    resolver: zodResolver(loginFormSchema),
+  const form = useForm<z.infer<typeof LoginFormSchema>>({
+    resolver: zodResolver(LoginFormSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -36,7 +36,7 @@ export const LoginForm = () => {
   const isSubmitting = form.formState.isSubmitting;
 
   async function onSubmit(
-    values: z.infer<typeof loginFormSchema>
+    values: z.infer<typeof LoginFormSchema>
   ) {
     setError("");
     setsuccess("");

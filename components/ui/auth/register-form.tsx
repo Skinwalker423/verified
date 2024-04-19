@@ -22,7 +22,7 @@ import { FormSuccess } from "./form-success";
 import { useState, useTransition } from "react";
 import { register } from "@/actions/register";
 
-export const LoginForm = () => {
+export const RegisterForm = () => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState("");
   const [success, setsuccess] = useState("");
