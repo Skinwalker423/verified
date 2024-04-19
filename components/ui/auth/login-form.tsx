@@ -16,8 +16,15 @@ import {
 import { Input } from "../input";
 import { Button } from "../button";
 import { loginFormSchema } from "@/schemas";
+import { FormError } from "./form-error";
+import { FormSuccess } from "./form-success";
+import { login } from "@/actions/login";
+import { useState, useTransition } from "react";
 
 export const LoginForm = () => {
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState("");
+  const [success, setsuccess] = useState("");
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -26,12 +33,28 @@ export const LoginForm = () => {
     },
   });
 
-  function onSubmit(
+  const isSubmitting = form.formState.isSubmitting;
+
+  async function onSubmit(
     values: z.infer<typeof loginFormSchema>
   ) {
+    setError("");
+    setsuccess("");
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    await new Promise((resolve) => {
+      setTimeout(resolve, 3000);
+    });
+    startTransition(async () => {
+      const message = await login(values);
+      if (message.error) {
+        setError(message.error);
+      }
+
+      if (message.success) {
+        setsuccess(message.success);
+      }
+    });
   }
 
   return (
@@ -56,6 +79,7 @@ export const LoginForm = () => {
                   <Input
                     type='email'
                     placeholder='123@gmail.com'
+                    disabled={isSubmitting || isPending}
                     {...field}
                   />
                 </FormControl>
@@ -73,7 +97,8 @@ export const LoginForm = () => {
                 <FormControl>
                   <Input
                     type='password'
-                    defaultValue={"******"}
+                    placeholder={"******"}
+                    disabled={isSubmitting || isPending}
                     {...field}
                   />
                 </FormControl>
@@ -82,12 +107,17 @@ export const LoginForm = () => {
               </FormItem>
             )}
           />
+          <FormError message={error} />
+          <FormSuccess message={success} />
           <Button
             className='w-full'
             variant={"destructive"}
             type='submit'
+            disabled={isSubmitting || isPending}
           >
-            Login
+            {isSubmitting || isPending
+              ? "Logging in..."
+              : "Login"}
           </Button>
         </form>
       </Form>
