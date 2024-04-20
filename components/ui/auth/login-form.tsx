@@ -42,9 +42,7 @@ export const LoginForm = () => {
     setsuccess("");
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    await new Promise((resolve) => {
-      setTimeout(resolve, 3000);
-    });
+
     startTransition(async () => {
       const message = await login(values);
       if (message.error) {
