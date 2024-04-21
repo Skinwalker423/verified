@@ -4,12 +4,11 @@ import { RegisterFormSchema } from "@/schemas";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import db from "@/lib/db";
+import { getUserByEmail } from "@/data/user";
 
 export const register = async (
   values: z.infer<typeof RegisterFormSchema>
 ): Promise<{ error?: string; success?: string }> => {
-  console.log("Registering...");
-  console.log("values", values);
   const validatedFields =
     RegisterFormSchema.safeParse(values);
 
@@ -21,9 +20,7 @@ export const register = async (
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const existingUser = await db.user.findUnique({
-    where: { email },
-  });
+  const existingUser = await getUserByEmail(email);
 
   if (existingUser) {
     return {
