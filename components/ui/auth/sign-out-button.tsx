@@ -1,0 +1,17 @@
+import { signOut } from "@/auth";
+import { Button } from "../button";
+
+export const SignOutButton = () => {
+  return (
+    <form
+      action={async () => {
+        "use server";
+        await signOut({
+          redirectTo: "/",
+        });
+      }}
+    >
+      <button type='submit'>Sign Out</button>
+    </form>
+  );
+};

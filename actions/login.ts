@@ -8,7 +8,7 @@ import { z } from "zod";
 
 export const login = async (
   values: z.infer<typeof LoginFormSchema>
-): Promise<{ error?: string; success?: string } | void> => {
+): Promise<{ error?: string; success?: string }> => {
   console.log("logging in...");
   console.log("values", values);
   const validatedFields = LoginFormSchema.safeParse(values);
@@ -25,6 +25,8 @@ export const login = async (
       password,
       redirectTo: DEFAULT_LOGIN_REDIRECT,
     });
+
+    return { success: "signed in" };
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
