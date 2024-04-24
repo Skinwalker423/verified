@@ -5,7 +5,13 @@ const SettingsPage = async () => {
 
   console.log({ session });
 
-  return <div>SettingsPage</div>;
+  return (
+    <div>
+      SettingsPage
+      <h1>Hello, {session?.user?.name || "Stranger"}</h1>
+      <p>{session?.user?.email}</p>
+    </div>
+  );
 };
 
 export default SettingsPage;

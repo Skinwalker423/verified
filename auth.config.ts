@@ -3,7 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 
 import type { NextAuthConfig } from "next-auth";
 import { LoginFormSchema } from "./schemas";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { getUserByEmail } from "./data/user";
 
 export default {
@@ -23,12 +23,12 @@ export default {
 
           if (!user || !user?.password) return null;
 
-          const hasConfirmedPassword = bcrypt.compare(
+          const hasConfirmedPassword = await bcrypt.compare(
             password,
             user.password
           );
 
-          if (!hasConfirmedPassword) {
+          if (hasConfirmedPassword) {
             return user;
           }
         }
