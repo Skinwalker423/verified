@@ -1,5 +1,4 @@
 import { signOut } from "@/auth";
-import { Button } from "../button";
 
 export const SignOutButton = () => {
   return (
