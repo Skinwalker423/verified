@@ -12,9 +12,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../form";
-import { Input } from "../input";
-import { Button } from "../button";
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 import { RegisterFormSchema } from "@/schemas";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";

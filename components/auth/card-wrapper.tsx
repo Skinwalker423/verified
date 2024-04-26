@@ -6,7 +6,7 @@ import {
   CardContent,
   CardHeader,
   CardFooter,
-} from "../card";
+} from "../ui/card";
 import Link from "next/link";
 import { Header } from "./header";
 import { Social } from "./social";

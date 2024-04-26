@@ -20,6 +20,10 @@ declare module "@auth/core/adapters" {
 
 export const { handlers, auth, signIn, signOut } = NextAuth(
   {
+    pages: {
+      signIn: "/auth/login",
+      error: "/auth/error",
+    },
     events: {
       async linkAccount({ user }) {
         await db.user.update({

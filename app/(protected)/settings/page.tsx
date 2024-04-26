@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { SignOutButton } from "@/components/ui/auth/sign-out-button";
+import { SignOutButton } from "@/components/auth/sign-out-button";
 import Image from "next/image";
 
 const SettingsPage = async () => {
