@@ -20,9 +20,16 @@ declare module "@auth/core/adapters" {
 
 export const { handlers, auth, signIn, signOut } = NextAuth(
   {
+    events: {
+      async linkAccount({ user }) {
+        await db.user.update({
+          where: { id: user.id },
+          data: { emailVerified: new Date() },
+        });
+      },
+    },
     callbacks: {
       jwt: async ({ token }) => {
-        console.log("jwt", token);
         if (token.email) {
           const user = await getUserByEmail(token.email);
           if (user) {
@@ -32,7 +39,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         return token;
       },
       session: ({ session, token }) => {
-        console.log({ token });
         const user = session.user;
         if (token.sub) {
           session.user.id = token.sub;
@@ -43,7 +49,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
             | "ADMIN";
         }
 
-        console.log("session", session);
         return session;
       },
     },

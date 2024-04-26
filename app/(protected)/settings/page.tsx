@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { SignOutButton } from "@/components/ui/auth/sign-out-button";
+import Image from "next/image";
 
 const SettingsPage = async () => {
   const session = await auth();
@@ -14,6 +15,14 @@ const SettingsPage = async () => {
       <h1>Hello, {session?.user?.name || "Stranger"}</h1>
       <p>{session?.user?.email}</p>
       <SignOutButton />
+      {session.user?.image && (
+        <Image
+          src={session.user?.image}
+          alt='avatar'
+          width={24}
+          height={24}
+        />
+      )}
     </div>
   );
 };
