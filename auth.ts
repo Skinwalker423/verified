@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import db from "./lib/db";
 import authConfig from "./auth.config";
-import { getUserById } from "./data/user";
+import { getUserByEmail } from "./data/user";
 
 declare module "next-auth" {
   interface User {
@@ -23,8 +23,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
     callbacks: {
       jwt: async ({ token }) => {
         console.log("jwt", token);
-        if (token.sub) {
-          const user = await getUserById(token.sub);
+        if (token.email) {
+          const user = await getUserByEmail(token.email);
           if (user) {
             token.role = user.role;
           }
