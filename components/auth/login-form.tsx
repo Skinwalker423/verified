@@ -1,5 +1,6 @@
 "use client";
-
+import { useState, useTransition } from "react";
+import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -19,7 +20,6 @@ import { LoginFormSchema } from "@/schemas";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
 import { login } from "@/actions/login";
-import { useState, useTransition } from "react";
 
 export const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -32,6 +32,12 @@ export const LoginForm = () => {
       password: "",
     },
   });
+
+  const params = useSearchParams();
+  const paramsError =
+    params.get("error") === "OAuthAccountNotLinked"
+      ? "Email is already in use with another provider. Sign in using original provider."
+      : "";
 
   const isSubmitting = form.formState.isSubmitting;
 
@@ -105,7 +111,7 @@ export const LoginForm = () => {
               </FormItem>
             )}
           />
-          <FormError message={error} />
+          <FormError message={error || paramsError} />
           <FormSuccess message={success} />
           <Button
             className='w-full'
