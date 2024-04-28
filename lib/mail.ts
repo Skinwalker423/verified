@@ -19,9 +19,12 @@ export const sendVerificationEmail = async (
       subject: "Confirm your email",
       html: `<p><a href="${confirmLink}">Click to confirm account</a></p>`,
     });
+
+    return data;
   } catch (error) {
     if (error instanceof Error) {
       console.error(error.message);
+      return;
     }
   }
 };

@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import db from "@/lib/db";
 import { getUserByEmail } from "@/data/user";
 import { generateVerificationToken } from "@/lib/tokens";
+import { sendVerificationEmail } from "@/lib/mail";
 
 export const register = async (
   values: z.infer<typeof RegisterFormSchema>
@@ -48,6 +49,18 @@ export const register = async (
   console.log("new token created", verificationToken);
 
   // send verification token to email
+
+  const verificationEmail = await sendVerificationEmail(
+    verificationToken.email,
+    verificationToken.token
+  );
+
+  if (!verificationEmail)
+    return {
+      error:
+        "Problem creating account and sending verification email. Try again",
+    };
+  console.log({ verificationEmail });
 
   return { success: "Confirmation email sent!" };
 };
