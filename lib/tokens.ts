@@ -1,6 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
 import db from "./db";
-import { getVerificationTokenByEmail } from "@/data/verification-token";
+import {
+  getVerificationTokenByEmail,
+  getVerificationTokenByToken,
+} from "@/data/verification-token";
 
 export const generateVerificationToken = async (
   email: string
@@ -25,4 +28,29 @@ export const generateVerificationToken = async (
       data: { email, token: newToken, expires },
     });
   return newVerificationToken;
+};
+
+export const updateVerificatonToken = async (
+  token: string
+) => {
+  if (!token) return;
+
+  const verificationToken =
+    await getVerificationTokenByToken(token);
+
+  if (!verificationToken || !verificationToken.email)
+    return;
+
+  const updatedUser = await db.user.update({
+    where: { email: verificationToken.email },
+    data: { emailVerified: new Date() },
+  });
+
+  if (!updatedUser) return;
+
+  await db.verificationToken.delete({
+    where: { id: verificationToken.id },
+  });
+
+  console.log({ updatedUser });
 };
