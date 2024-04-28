@@ -33,6 +33,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
       },
     },
     callbacks: {
+      signIn: async ({ user }) => {
+        if (!user.id) return false;
+
+        const existingUser = await getUserById(user.id);
+
+        if (!existingUser || !existingUser.emailVerified)
+          return false;
+
+        return true;
+      },
       jwt: async ({ token }) => {
         if (token.sub) {
           const user = await getUserById(token.sub);
