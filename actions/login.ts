@@ -59,9 +59,15 @@ export const login = async (
             error: "Invalid credentials",
           };
 
+        case "AccessDenied":
+          return {
+            error:
+              "Access Denied. Please confirm your account email",
+          };
+
         default:
           return {
-            error: "Something went wrong",
+            error: `Something went wrong: ${error.type}`,
           };
       }
     }
