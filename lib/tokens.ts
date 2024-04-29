@@ -44,7 +44,7 @@ export const updateVerificatonToken = async (
     if (!verificationToken || !verificationToken.email)
       return { error: "Token does not exist" };
 
-    const expiration = verificationToken?.expires;
+    const expiration = verificationToken.expires;
     const now = new Date();
 
     if (!expiration || expiration < now) {
