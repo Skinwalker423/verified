@@ -1,9 +1,12 @@
+"use server";
+
 import { v4 as uuidv4 } from "uuid";
 import db from "./db";
 import {
   getVerificationTokenByEmail,
   getVerificationTokenByToken,
 } from "@/data/verification-token";
+import { getUserByEmail } from "@/data/user";
 
 export const generateVerificationToken = async (
   email: string
@@ -34,23 +37,47 @@ export const updateVerificatonToken = async (
   token: string
 ) => {
   if (!token) return;
+  try {
+    const verificationToken =
+      await getVerificationTokenByToken(token);
 
-  const verificationToken =
-    await getVerificationTokenByToken(token);
+    if (!verificationToken || !verificationToken.email)
+      return { error: "Token does not exist" };
 
-  if (!verificationToken || !verificationToken.email)
-    return;
+    const expiration = verificationToken?.expires;
+    const now = new Date();
 
-  const updatedUser = await db.user.update({
-    where: { email: verificationToken.email },
-    data: { emailVerified: new Date() },
-  });
+    if (!expiration || expiration < now) {
+      return { error: "Token has expired" };
+    }
 
-  if (!updatedUser) return;
+    const user = await getUserByEmail(
+      verificationToken.email
+    );
 
-  await db.verificationToken.delete({
-    where: { id: verificationToken.id },
-  });
+    if (!user) return { error: "Email does not exist" };
 
-  console.log({ updatedUser });
+    const updatedUser = await db.user.update({
+      where: { id: user.id },
+      data: {
+        emailVerified: new Date(),
+        email: verificationToken.email,
+      },
+    });
+
+    if (!updatedUser)
+      return { error: "could not find or update user" };
+
+    await db.verificationToken.delete({
+      where: { id: verificationToken.id },
+    });
+
+    return { success: "email verified" };
+  } catch (error) {
+    if (error instanceof Error) {
+      return { error: error.message };
+    }
+
+    console.error("problem verifying token");
+  }
 };
