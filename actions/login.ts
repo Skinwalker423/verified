@@ -2,6 +2,7 @@
 
 import { signIn } from "@/auth";
 import { getUserByEmail } from "@/data/user";
+import { sendVerificationEmail } from "@/lib/mail";
 import { generateVerificationToken } from "@/lib/tokens";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { LoginFormSchema } from "@/schemas";
@@ -35,7 +36,12 @@ export const login = async (
 
   if (!existingUser.emailVerified) {
     const newVerificationToken =
-      await generateVerificationToken(email);
+      await generateVerificationToken(existingUser.email);
+
+    await sendVerificationEmail(
+      newVerificationToken.email,
+      newVerificationToken.token
+    );
 
     return {
       error:
