@@ -42,7 +42,10 @@ export const updateVerificatonToken = async (
       await getVerificationTokenByToken(token);
 
     if (!verificationToken || !verificationToken.email)
-      return { error: "Token does not exist" };
+      return {
+        error:
+          "Token does not exist or has been already verified. Try logging in",
+      };
 
     const expiration = verificationToken.expires;
     const now = new Date();

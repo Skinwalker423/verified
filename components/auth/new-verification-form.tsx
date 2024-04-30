@@ -42,14 +42,14 @@ export const NewVerificationForm = () => {
 
   return (
     <CardWrapper
-      backButtonHref='/'
-      backButtonLabel='Back to home'
+      backButtonHref='/auth/login'
+      backButtonLabel='&larr; Go to Login'
       headerLabel='Confirming your email'
     >
       <div className='flex items-center w-full justify-center'>
         {!success && !error && <BeatLoader />}
         <FormSuccess message={success} />
-        <FormError message={error} />
+        {!success && error && <FormError message={error} />}
       </div>
     </CardWrapper>
   );
