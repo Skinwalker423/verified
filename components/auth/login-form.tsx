@@ -20,6 +20,7 @@ import { LoginFormSchema } from "@/schemas";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
 import { login } from "@/actions/login";
+import Link from "next/link";
 
 export const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -106,7 +107,16 @@ export const LoginForm = () => {
                     {...field}
                   />
                 </FormControl>
-
+                <Button
+                  variant={"link"}
+                  size={"sm"}
+                  asChild
+                  className='px-0 font-normal'
+                >
+                  <Link href={"/auth/reset"}>
+                    Forgot password?
+                  </Link>
+                </Button>
                 <FormMessage />
               </FormItem>
             )}
