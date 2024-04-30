@@ -8,6 +8,11 @@ export const LoginFormSchema = z.object({
     message: "password required",
   }),
 });
+export const ResetFormSchema = z.object({
+  email: z.string().email({
+    message: "Email is required",
+  }),
+});
 
 export const RegisterFormSchema = z
   .object({
