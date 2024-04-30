@@ -8,7 +8,7 @@ export const sendVerificationEmail = async (
 ) => {
   const confirmLink = `${
     process.env.NODE_ENV === "production"
-      ? process.env.BASE_URL
+      ? `${process.env.BASE_URL}/auth/new-verification?token=${token}`
       : "http://localhost:3000"
   }/auth/new-verification?token=${token}`;
 
@@ -18,6 +18,32 @@ export const sendVerificationEmail = async (
       to: email,
       subject: "Confirm your email",
       html: `<p><a href="${confirmLink}">Click to confirm account</a></p>`,
+    });
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+      return;
+    }
+  }
+};
+export const sendPasswordResetEmail = async (
+  email: string,
+  token: string
+) => {
+  const resetLink = `${
+    process.env.NODE_ENV === "production"
+      ? `${process.env.BASE_URL}/auth/new-password?token=${token}`
+      : "http://localhost:3000"
+  }/auth/new-password?token=${token}`;
+
+  try {
+    const data = await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: email,
+      subject: "Confirm your email",
+      html: `<p>Click<a href="${resetLink}">here</a> to reset password</p>`,
     });
 
     return data;
