@@ -22,10 +22,10 @@ export const RegisterFormSchema = z
     name: z.string().min(1, {
       message: "Name must entered",
     }),
-    password: z.string().min(1, {
+    password: z.string().min(8, {
       message: "password required",
     }),
-    confirmPassword: z.string().min(1, {
+    confirmPassword: z.string().min(8, {
       message: "password required",
     }),
   })
@@ -40,10 +40,10 @@ export const RegisterFormSchema = z
 
 export const NewPasswordFormSchema = z
   .object({
-    password: z.string().min(1, {
+    password: z.string().min(8, {
       message: "password required",
     }),
-    confirmPassword: z.string().min(1, {
+    confirmPassword: z.string().min(8, {
       message: "password required",
     }),
   })

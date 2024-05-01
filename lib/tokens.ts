@@ -13,6 +13,8 @@ import {
   getPasswordResetTokenByToken,
 } from "@/data/password-reset-token";
 import { error } from "console";
+import { NewPasswordFormSchema } from "@/schemas";
+import { z } from "zod";
 
 export const generateVerificationToken = async (
   email: string
@@ -118,14 +120,29 @@ export const generatePasswordResetToken = async (
 
 interface PasswordResetProps {
   token: string;
-  password: string;
+  values: z.infer<typeof NewPasswordFormSchema>;
 }
 
 export const updatePasswordResetToken = async ({
   token,
-  password,
+  values,
 }: PasswordResetProps) => {
-  if (!token || !password) return;
+  if (!token || !values)
+    return { error: "No token or password" };
+
+  const validatedFields =
+    NewPasswordFormSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return { error: "Invalid fields" };
+  }
+
+  const { password, confirmPassword } =
+    validatedFields.data;
+
+  if (password !== confirmPassword)
+    return { error: "Passwords do not match" };
+
   try {
     const verificationToken =
       await getPasswordResetTokenByToken(token);
@@ -170,7 +187,7 @@ export const updatePasswordResetToken = async ({
         error: "Must not be a previously used password",
       };
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const updatedUser = await db.user.update({
       where: { id: user.id },

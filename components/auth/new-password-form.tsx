@@ -63,7 +63,7 @@ export const NewPasswordForm = () => {
       }
       const message = await updatePasswordResetToken({
         token,
-        password: values.password,
+        values,
       });
       if (message?.error) {
         setError(message.error);
