@@ -37,3 +37,21 @@ export const RegisterFormSchema = z
       path: ["confirmPassword"],
     }
   );
+
+export const NewPasswordFormSchema = z
+  .object({
+    password: z.string().min(1, {
+      message: "password required",
+    }),
+    confirmPassword: z.string().min(1, {
+      message: "password required",
+    }),
+  })
+  .refine(
+    ({ password, confirmPassword }) =>
+      password === confirmPassword,
+    {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    }
+  );
