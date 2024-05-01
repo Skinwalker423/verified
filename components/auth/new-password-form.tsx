@@ -15,31 +15,36 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { RegisterFormSchema } from "@/schemas";
+import { NewPasswordFormSchema } from "@/schemas";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
 
 import { useState, useTransition } from "react";
-import { register } from "@/actions/register";
+import { updatePasswordResetToken } from "@/lib/tokens";
+import { useSearchParams } from "next/navigation";
 
-export const RegisterForm = () => {
+export const NewPasswordForm = () => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState("");
   const [success, setsuccess] = useState("");
-  const form = useForm<z.infer<typeof RegisterFormSchema>>({
-    resolver: zodResolver(RegisterFormSchema),
+
+  const params = useSearchParams();
+  const token = params.get("token");
+
+  const form = useForm<
+    z.infer<typeof NewPasswordFormSchema>
+  >({
+    resolver: zodResolver(NewPasswordFormSchema),
     defaultValues: {
-      email: "",
       password: "",
       confirmPassword: "",
-      name: "",
     },
   });
 
   const isSubmitting = form.formState.isSubmitting;
 
   async function onSubmit(
-    values: z.infer<typeof RegisterFormSchema>
+    values: z.infer<typeof NewPasswordFormSchema>
   ) {
     setError("");
     setsuccess("");
@@ -47,12 +52,16 @@ export const RegisterForm = () => {
     // ✅ This will be type-safe and validated.
 
     startTransition(async () => {
-      const message = await register(values);
-      if (message.error) {
+      if (!token) return;
+      const message = await updatePasswordResetToken({
+        token,
+        password: values.password,
+      });
+      if (message?.error) {
         setError(message.error);
       }
 
-      if (message.success) {
+      if (message?.success) {
         setsuccess(message.success);
       }
     });
@@ -60,54 +69,15 @@ export const RegisterForm = () => {
 
   return (
     <CardWrapper
-      backButtonLabel='Already have an account? Sign in'
-      headerLabel='Create an Account'
+      backButtonLabel='Back to login'
+      headerLabel='Update Password'
       backButtonHref='/auth/login'
-      showSocial
     >
       <Form {...form}>
         <form
           className='space-y-5'
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <FormField
-            control={form.control}
-            name='email'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type='email'
-                    placeholder='123@gmail.com'
-                    disabled={isSubmitting || isPending}
-                    {...field}
-                  />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='name'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input
-                    type='text'
-                    placeholder={"Joeblow"}
-                    disabled={isSubmitting || isPending}
-                    {...field}
-                  />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name='password'
@@ -153,8 +123,8 @@ export const RegisterForm = () => {
             disabled={isSubmitting || isPending}
           >
             {isSubmitting || isPending
-              ? "Creating account..."
-              : "Create an account"}
+              ? "updating..."
+              : "Update Password"}
           </Button>
         </form>
       </Form>
