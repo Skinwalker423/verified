@@ -133,7 +133,7 @@ export const updatePasswordResetToken = async ({
     if (!verificationToken || !verificationToken.email)
       return {
         error:
-          "Token does not exist or has been already verified. Try logging in",
+          "Token does not exist or password has been already updated.",
       };
 
     const expiration = verificationToken.expires;

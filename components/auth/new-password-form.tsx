@@ -19,7 +19,12 @@ import { NewPasswordFormSchema } from "@/schemas";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
 
-import { useState, useTransition } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+  useTransition,
+} from "react";
 import { updatePasswordResetToken } from "@/lib/tokens";
 import { useSearchParams } from "next/navigation";
 
@@ -43,7 +48,7 @@ export const NewPasswordForm = () => {
 
   const isSubmitting = form.formState.isSubmitting;
 
-  async function onSubmit(
+  async function handleOnSubmit(
     values: z.infer<typeof NewPasswordFormSchema>
   ) {
     setError("");
@@ -52,7 +57,10 @@ export const NewPasswordForm = () => {
     // ✅ This will be type-safe and validated.
 
     startTransition(async () => {
-      if (!token) return;
+      if (!token) {
+        setError("Invalid token");
+        return;
+      }
       const message = await updatePasswordResetToken({
         token,
         password: values.password,
@@ -66,6 +74,8 @@ export const NewPasswordForm = () => {
       }
     });
   }
+
+  const onSubmit = useCallback(handleOnSubmit, [token]);
 
   return (
     <CardWrapper
