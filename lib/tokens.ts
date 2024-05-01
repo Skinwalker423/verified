@@ -12,6 +12,7 @@ import {
   getPasswordResetTokenByEmail,
   getPasswordResetTokenByToken,
 } from "@/data/password-reset-token";
+import { error } from "console";
 
 export const generateVerificationToken = async (
   email: string
@@ -139,14 +140,35 @@ export const updatePasswordResetToken = async ({
     const now = new Date();
 
     if (!expiration || expiration < now) {
-      return { error: "Token has expired" };
+      return {
+        error:
+          "Token has expired. Request a new password reset",
+      };
     }
 
     const user = await getUserByEmail(
       verificationToken.email
     );
 
-    if (!user) return { error: "Email does not exist" };
+    if (!user) return { error: "Email does not exist " };
+
+    if (!user.password)
+      return {
+        error:
+          "Account cannot be updated. Try logging in using your original account provider",
+      };
+
+    // check if it's the same password from account
+
+    const isOldPassword = await bcrypt.compare(
+      password,
+      user.password
+    );
+
+    if (isOldPassword)
+      return {
+        error: "Must not be a previously used password",
+      };
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -166,7 +188,7 @@ export const updatePasswordResetToken = async ({
       where: { id: verificationToken.id },
     });
 
-    return { success: "email verified" };
+    return { success: "Password successfully updated!" };
   } catch (error) {
     if (error instanceof Error) {
       return { error: error.message };
