@@ -65,11 +65,11 @@ export const NewPasswordForm = () => {
         token,
         values,
       });
-      if (message?.error) {
+      if (message.error) {
         setError(message.error);
       }
 
-      if (message?.success) {
+      if (message.success) {
         setsuccess(message.success);
       }
     });

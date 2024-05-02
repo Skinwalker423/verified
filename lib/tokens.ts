@@ -212,5 +212,6 @@ export const updatePasswordResetToken = async ({
     }
 
     console.error("problem verifying token");
+    return { error: "problem verifying token" };
   }
 };
