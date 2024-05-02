@@ -12,9 +12,10 @@ import {
   getPasswordResetTokenByEmail,
   getPasswordResetTokenByToken,
 } from "@/data/password-reset-token";
-import { error } from "console";
 import { NewPasswordFormSchema } from "@/schemas";
 import { z } from "zod";
+import crypto from "crypto";
+import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 
 export const generateVerificationToken = async (
   email: string
@@ -214,4 +215,37 @@ export const updatePasswordResetToken = async ({
     console.error("problem verifying token");
     return { error: "problem verifying token" };
   }
+};
+
+export const generateTwoFactorToken = async (
+  email: string
+) => {
+  if (!email) return;
+
+  const token = crypto
+    .randomInt(100_000, 1_000_000)
+    .toString();
+  const expires = new Date(
+    new Date().getTime() + 60 * 15 * 1000
+  );
+
+  const existingToken = await getTwoFactorTokenByEmail(
+    email
+  );
+
+  if (existingToken) {
+    await db.passwordResetToken.delete({
+      where: { id: existingToken.id },
+    });
+  }
+
+  const twoFactorToken = await db.twoFactorToken.create({
+    data: {
+      token,
+      email,
+      expires,
+    },
+  });
+
+  return twoFactorToken;
 };
