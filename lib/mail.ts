@@ -54,3 +54,24 @@ export const sendPasswordResetEmail = async (
     }
   }
 };
+
+export const sendTwoFactorTokenConfirmationEmail = async (
+  email: string,
+  token: string
+) => {
+  try {
+    const data = await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: email,
+      subject: "2FA Confirmation Code",
+      html: `<p>Here is your 6 digit code: ${token}</p>`,
+    });
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+      return;
+    }
+  }
+};
