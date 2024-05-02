@@ -17,6 +17,8 @@ import { z } from "zod";
 import crypto from "crypto";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 
+// verification tokens on registration
+
 export const generateVerificationToken = async (
   email: string
 ) => {
@@ -93,6 +95,8 @@ export const updateVerificatonToken = async (
     console.error("problem verifying token");
   }
 };
+
+// Password reset token functions
 
 export const generatePasswordResetToken = async (
   email: string
@@ -217,6 +221,8 @@ export const updatePasswordResetToken = async ({
   }
 };
 
+// tokens for the optional two factor authentication
+
 export const generateTwoFactorToken = async (
   email: string
 ) => {
@@ -225,6 +231,8 @@ export const generateTwoFactorToken = async (
   const token = crypto
     .randomInt(100_000, 1_000_000)
     .toString();
+
+  // expires in 15 min
   const expires = new Date(
     new Date().getTime() + 60 * 15 * 1000
   );
