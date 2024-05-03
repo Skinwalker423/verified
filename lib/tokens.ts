@@ -226,7 +226,7 @@ export const updatePasswordResetToken = async ({
 export const generateTwoFactorToken = async (
   email: string
 ) => {
-  if (!email) return;
+  if (!email) return null;
 
   const token = crypto
     .randomInt(100_000, 1_000_000)
@@ -242,7 +242,7 @@ export const generateTwoFactorToken = async (
   );
 
   if (existingToken) {
-    await db.passwordResetToken.delete({
+    await db.twoFactorToken.delete({
       where: { id: existingToken.id },
     });
   }
