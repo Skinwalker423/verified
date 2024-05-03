@@ -7,6 +7,7 @@ export const LoginFormSchema = z.object({
   password: z.string().min(1, {
     message: "password required",
   }),
+  code: z.optional(z.string()),
 });
 export const ResetFormSchema = z.object({
   email: z.string().email({
