@@ -2,8 +2,14 @@
 
 import { signIn } from "@/auth";
 import { getUserByEmail } from "@/data/user";
-import { sendVerificationEmail } from "@/lib/mail";
-import { generateVerificationToken } from "@/lib/tokens";
+import {
+  sendVerificationEmail,
+  sendTwoFactorTokenConfirmationEmail,
+} from "@/lib/mail";
+import {
+  generateVerificationToken,
+  generateTwoFactorToken,
+} from "@/lib/tokens";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { LoginFormSchema } from "@/schemas";
 import { AuthError } from "next-auth";
@@ -11,7 +17,11 @@ import { z } from "zod";
 
 export const login = async (
   values: z.infer<typeof LoginFormSchema>
-): Promise<{ error?: string; success?: string }> => {
+): Promise<{
+  error?: string;
+  success?: string;
+  twoFactor?: boolean;
+}> => {
   console.log("logging in...");
   console.log("values", values);
   const validatedFields = LoginFormSchema.safeParse(values);
@@ -47,6 +57,25 @@ export const login = async (
       error:
         "Please check your email to verify your account in order to log in",
     };
+  }
+
+  if (
+    existingUser.isTwoFactorEnabled &&
+    existingUser.email
+  ) {
+    const twofactorToken = await generateTwoFactorToken(
+      existingUser.email
+    );
+    if (!twofactorToken)
+      return {
+        error: "Could not establish two factor token",
+      };
+    await sendTwoFactorTokenConfirmationEmail(
+      twofactorToken.email,
+      twofactorToken.token
+    );
+
+    return { twoFactor: true };
   }
 
   try {
