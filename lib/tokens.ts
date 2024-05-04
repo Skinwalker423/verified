@@ -234,7 +234,7 @@ export const generateTwoFactorToken = async (
 
   // expires in 15 min
   const expires = new Date(
-    new Date().getTime() + 60 * 15 * 1000
+    new Date().getTime() + 60 * 5 * 1000
   );
 
   const existingToken = await getTwoFactorTokenByEmail(
