@@ -169,13 +169,16 @@ export const LoginForm = () => {
             <Button
               className='w-full'
               variant={"destructive"}
+              size={"lg"}
               type='submit'
               disabled={isSubmitting || isPending}
             >
               {showTwoFactor ? "Confirm" : "Login"}{" "}
-              <span>
+              <span className='ml-5'>
                 {isSubmitting ||
-                  (isPending && <ClockLoader />)}
+                  (isPending && (
+                    <ClockLoader size={24} color='white' />
+                  ))}
               </span>
             </Button>
           </div>
