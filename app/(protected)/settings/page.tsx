@@ -11,7 +11,7 @@ const SettingsPage = () => {
   if (status === "loading") return null;
 
   return (
-    <div>
+    <div className='bg-white'>
       SettingsPage
       <Suspense fallback={"Loading..."}>
         <h1>Hello, {data?.user?.name || "Stranger"}</h1>
