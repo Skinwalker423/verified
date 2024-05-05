@@ -20,7 +20,7 @@ export const NewVerificationForm = () => {
   const onSubmit = useCallback(() => {
     setError("");
     setsuccess("");
-    console.log(token);
+
     if (!token) {
       setError("Missing token");
       return;
