@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { Inter } from "next/font/google";
+import { NavBar } from "./_components/navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,12 +16,10 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <SessionProvider>
-      <main className=' w-full h-full flex flex-col items-center justify-center blue-gradient'>
-        <div className='text-white'>Navbar</div>
-        <div className='text-white'>Sidebar</div>
-        {children}
-      </main>
-    </SessionProvider>
+    <main className=' w-full h-full flex flex-col items-center justify-center blue-gradient'>
+      <NavBar />
+      <div className='text-white'>Sidebar</div>
+      {children}
+    </main>
   );
 }
