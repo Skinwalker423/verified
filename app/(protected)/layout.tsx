@@ -16,10 +16,12 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className=' w-full h-full flex flex-col items-center justify-center blue-gradient'>
-      <NavBar />
-      <div className='text-white'>Sidebar</div>
-      {children}
-    </main>
+    <SessionProvider>
+      <main className=' w-full h-full flex flex-col items-center justify-center blue-gradient gap-5'>
+        <NavBar />
+
+        {children}
+      </main>
+    </SessionProvider>
   );
 }
