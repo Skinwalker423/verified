@@ -9,6 +9,7 @@ declare module "next-auth" {
   interface User {
     // Add your additional properties here:
     role?: "USER" | "ADMIN";
+    isTwoFactorEnabled: boolean;
   }
 }
 
@@ -16,6 +17,7 @@ declare module "@auth/core/adapters" {
   interface AdapterUser {
     // Add your additional properties here:
     role?: "USER" | "ADMIN";
+    isTwoFactorEnabled: boolean;
   }
 }
 
@@ -64,9 +66,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
       jwt: async ({ token }) => {
         if (token.sub) {
           const user = await getUserById(token.sub);
-
           if (user) {
             token.role = user.role;
+            token.isTwoFactorEnabled =
+              user.isTwoFactorEnabled;
           }
         }
         return token;
@@ -78,6 +81,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         }
         if (token.role && user) {
           user.role = token.role as "USER" | "ADMIN";
+        }
+
+        if (token.isTwoFactorEnabled && user) {
+          user.isTwoFactorEnabled =
+            token.isTwoFactorEnabled as boolean;
         }
 
         return session;
