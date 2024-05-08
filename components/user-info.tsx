@@ -5,6 +5,7 @@ import {
   CardFooter,
   CardContent,
 } from "./ui/card";
+import { Badge } from "./ui/badge";
 
 interface UserInfoProps {
   user?: User & { role?: "USER" | "ADMIN" };
@@ -52,9 +53,15 @@ export const UserInfo = ({
           <p className='text-sm font-medium'>
             Two Factor Authentication
           </p>
-          <p className='truncate text-xs max-w-[180px] font-mono bg-slate-100 rounded-md'>
+          <Badge
+            variant={
+              user?.isTwoFactorEnabled
+                ? "success"
+                : "destructive"
+            }
+          >
             {user?.isTwoFactorEnabled ? "ON" : "OFF"}
-          </p>
+          </Badge>
         </div>
       </CardContent>
       <CardFooter>footer</CardFooter>
