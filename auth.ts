@@ -9,7 +9,7 @@ declare module "next-auth" {
   interface User {
     // Add your additional properties here:
     role?: "USER" | "ADMIN";
-    isTwoFactorEnabled: boolean;
+    isTwoFactorEnabled?: boolean;
   }
 }
 
@@ -17,7 +17,7 @@ declare module "@auth/core/adapters" {
   interface AdapterUser {
     // Add your additional properties here:
     role?: "USER" | "ADMIN";
-    isTwoFactorEnabled: boolean;
+    isTwoFactorEnabled?: boolean;
   }
 }
 
