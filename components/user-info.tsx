@@ -8,7 +8,7 @@ import {
 import { Badge } from "./ui/badge";
 
 interface UserInfoProps {
-  user?: User & { role?: "USER" | "ADMIN" };
+  user?: User | undefined;
   label: string;
 }
 
