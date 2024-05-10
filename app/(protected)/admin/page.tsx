@@ -1,6 +1,7 @@
 "use client";
 
 import { RoleGate } from "@/components/auth/role-gate";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
@@ -9,6 +10,20 @@ import {
 import { UserRole } from "@prisma/client";
 
 const AdminPage = () => {
+  const handleAdminApi = async () => {
+    const res = await fetch(
+      "http://localhost:3000/api/admin"
+    );
+
+    console.log("res", res);
+
+    if (res.ok) {
+      console.log("is admin");
+    } else {
+      console.log("forbidden");
+    }
+  };
+
   return (
     <Card className='w-[600px]'>
       <CardHeader>
@@ -21,6 +36,10 @@ const AdminPage = () => {
         <RoleGate allowedRole={UserRole.ADMIN}>
           For admins only: Keep it going!
         </RoleGate>
+        <div>
+          <h3>Admin only API route</h3>
+          <Button onClick={handleAdminApi}>Test</Button>
+        </div>
       </CardContent>
     </Card>
   );
