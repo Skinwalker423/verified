@@ -1,5 +1,6 @@
 "use client";
 
+import { admin } from "@/actions/admin";
 import { RoleGate } from "@/components/auth/role-gate";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,9 +9,18 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { UserRole } from "@prisma/client";
+import { useState } from "react";
 import { toast } from "sonner";
 
 const AdminPage = () => {
+  const [isAdmin, setIsAdmin] = useState("");
+  const [error, setError] = useState("");
+
+  const handleAdminServerAction = async () => {
+    const { error, success } = await admin();
+    if (error) setError(error);
+    if (success) setIsAdmin(success);
+  };
   const handleAdminApi = async () => {
     const res = await fetch(
       "http://localhost:3000/api/admin"
