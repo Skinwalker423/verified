@@ -26,23 +26,14 @@ const AdminPage = () => {
     if (error) {
       setError(error);
       toast.error("Forbidden", {
-        style: {
-          background: "red",
-          color: "white",
-        },
         description:
           "You are not authorized to use this server action",
-        closeButton: true,
       });
 
       return;
     }
     if (success) setIsAdmin(success);
     toast.success("Success!", {
-      style: {
-        background: "green",
-        color: "white",
-      },
       description: "Admin server action successfully done",
       action: {
         label: "More info",
