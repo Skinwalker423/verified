@@ -8,8 +8,14 @@ export const admin = async () => {
     const user = await getCurrentUser();
 
     if (user?.role !== UserRole.ADMIN) {
-      return { error: "Forbidden" };
+      return {
+        error: "Forbidden. Cannot do server action",
+      };
     } else {
+      // do an admin action
+      console.log(
+        "is Admin. Continuing to do a server action"
+      );
       return { success: "Allowed access" };
     }
   } catch (error) {
