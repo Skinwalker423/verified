@@ -30,4 +30,6 @@ export const settings = async (
       name: validatedFields.data.name,
     },
   });
+
+  return { success: "Successfully updated profile" };
 };

@@ -64,4 +64,5 @@ export const SettingsSchema = z.object({
       message: "Name must entered",
     })
     .optional(),
+  email: z.string().email().optional(),
 });

@@ -18,7 +18,6 @@ import useCurrentUser from "@/hooks/use-current-user";
 
 export const UserButton = () => {
   const { user } = useCurrentUser();
-  console.log("user", user);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
