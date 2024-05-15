@@ -4,12 +4,14 @@ import db from "./lib/db";
 import authConfig from "./auth.config";
 import { getUserById } from "./data/user";
 import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
+import { getAccountByUserId } from "./data/account";
 
 declare module "next-auth" {
   interface User {
     // Add your additional properties here:
     role?: "USER" | "ADMIN";
     isTwoFactorEnabled?: boolean;
+    isOAuth?: boolean;
   }
 }
 
@@ -18,6 +20,7 @@ declare module "@auth/core/adapters" {
     // Add your additional properties here:
     role?: "USER" | "ADMIN";
     isTwoFactorEnabled?: boolean;
+    isOAuth: boolean;
   }
 }
 
@@ -67,6 +70,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         if (token.sub) {
           const user = await getUserById(token.sub);
           if (user) {
+            const account = await getAccountByUserId(
+              user.id
+            );
+
+            token.isOAuth = !!account;
+            token.email = user.email;
+            token.name = user.name;
             token.role = user.role;
             token.isTwoFactorEnabled =
               user.isTwoFactorEnabled;
@@ -86,6 +96,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         if (token.isTwoFactorEnabled && user) {
           user.isTwoFactorEnabled =
             token.isTwoFactorEnabled as boolean;
+        }
+
+        if (token.name && user.name) {
+          user.name = token.name;
+        }
+
+        if (token.email && user.email) {
+          user.email = token.email;
+        }
+
+        if (user) {
+          user.isOAuth = token.isOAuth as boolean;
         }
 
         return session;
