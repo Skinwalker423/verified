@@ -56,3 +56,12 @@ export const NewPasswordFormSchema = z
       path: ["confirmPassword"],
     }
   );
+
+export const SettingsSchema = z.object({
+  name: z
+    .string()
+    .min(1, {
+      message: "Name must entered",
+    })
+    .optional(),
+});
