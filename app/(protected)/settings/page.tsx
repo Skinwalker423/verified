@@ -37,7 +37,7 @@ const SettingsPage = () => {
   >("");
   const [isPending, startTransition] = useTransition();
   const { user } = useCurrentUser();
-  const { update, data } = useSession();
+  const { update } = useSession();
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
     defaultValues: {
@@ -90,7 +90,10 @@ const SettingsPage = () => {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        disabled={isPending}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -104,7 +107,10 @@ const SettingsPage = () => {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          {...field}
+                          disabled={isPending}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -113,7 +119,9 @@ const SettingsPage = () => {
               )}
               {error && <FormError message={"test"} />}
               {success && <FormSuccess message={success} />}
-              <Button type='submit'>Save</Button>
+              <Button disabled={isPending} type='submit'>
+                {isPending ? "Saving..." : "Save"}
+              </Button>
             </form>
           </Form>
         </CardContent>
