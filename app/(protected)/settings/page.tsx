@@ -43,14 +43,19 @@ const SettingsPage = () => {
     defaultValues: {
       name: user?.name || undefined,
       email: user?.email || undefined,
+      isTwoFactorEnabled: user?.isTwoFactorEnabled,
+      role: user?.role,
+      password: undefined,
+      newPassword: undefined,
     },
   });
 
   const onSubmit = (
     values: z.infer<typeof SettingsSchema>
   ) => {
+    console.log("submitting");
     startTransition(() => {
-      settings({ name: "Boog" })
+      settings({ name: values.name })
         .then((data) => {
           if (data?.error) {
             setError(data.error);
@@ -100,24 +105,59 @@ const SettingsPage = () => {
                 )}
               />
               {!user?.isOAuth && (
-                <FormField
-                  control={form.control}
-                  name='email'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          disabled={isPending}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div>
+                  <FormField
+                    control={form.control}
+                    name='email'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            disabled={isPending}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='password'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            disabled={isPending}
+                            placeholder='******'
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='newPassword'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>New Password</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            disabled={isPending}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               )}
-              {error && <FormError message={"test"} />}
+              {error && <FormError message={error} />}
               {success && <FormSuccess message={success} />}
               <Button disabled={isPending} type='submit'>
                 {isPending ? "Saving..." : "Save"}
