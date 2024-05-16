@@ -79,13 +79,23 @@ export const SettingsSchema = z
       .optional(),
     newPassword: z
       .string()
-      .min(8, {
-        message: "password required",
+      .min(6, {
+        message: "Password requires at least 6 characters",
       })
       .optional(),
   })
   .refine(
-    ({ password, newPassword }) => password !== newPassword,
+    ({ password, newPassword }) => {
+      if (!password && !newPassword) {
+        return true;
+      }
+
+      if (password === newPassword) {
+        return false;
+      }
+
+      return true;
+    },
     {
       message: "New password cannot be the same as the old",
       path: ["newPassword"],
