@@ -78,6 +78,11 @@ const SettingsPage = () => {
           user?.role === values.role
             ? undefined
             : values.role,
+        isTwoFactorEnabled:
+          user?.isTwoFactorEnabled ===
+          values.isTwoFactorEnabled
+            ? undefined
+            : values.isTwoFactorEnabled,
       })
         .then((data) => {
           if (data?.error) {
@@ -128,7 +133,7 @@ const SettingsPage = () => {
               )}
             />
             {!user?.isOAuth && (
-              <div>
+              <>
                 <FormField
                   control={form.control}
                   name='email'
@@ -181,7 +186,32 @@ const SettingsPage = () => {
                     </FormItem>
                   )}
                 />
-              </div>
+                <FormField
+                  control={form.control}
+                  name='isTwoFactorEnabled'
+                  render={({ field }) => (
+                    <FormItem className='flex justify-between items-center border px-3 py-4 rounded-lg shadow-sm'>
+                      <div className='space-y-0.5'>
+                        <FormLabel>
+                          Two Factor Authentication
+                        </FormLabel>
+                        <FormDescription>
+                          Enable two-factor authentication
+                          (2FA) for added security
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          disabled={isPending}
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
             )}
             <FormField
               control={form.control}
@@ -214,30 +244,7 @@ const SettingsPage = () => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name='isTwoFactorEnabled'
-              render={({ field }) => (
-                <FormItem className='flex justify-between items-center border px-3 py-4 rounded-lg shadow-sm'>
-                  <div className='space-y-0.5'>
-                    <FormLabel>
-                      Two Factor Authentication
-                    </FormLabel>
-                    <FormDescription>
-                      Enable two-factor authentication (2FA)
-                      for added security
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             {error && <FormError message={error} />}
             {success && <FormSuccess message={success} />}
             <Button disabled={isPending} type='submit'>
