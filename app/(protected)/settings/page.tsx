@@ -18,6 +18,7 @@ import { SettingsSchema } from "@/schemas";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -35,6 +36,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UserRole } from "@prisma/client";
+import { Switch } from "@/components/ui/switch";
 
 const SettingsPage = () => {
   const [error, setError] = useState<string | undefined>(
@@ -208,6 +210,30 @@ const SettingsPage = () => {
                       </SelectItem>
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='isTwoFactorEnabled'
+              render={({ field }) => (
+                <FormItem className='flex justify-between items-center border px-3 py-4 rounded-lg shadow-sm'>
+                  <div className='space-y-0.5'>
+                    <FormLabel>
+                      Two Factor Authentication
+                    </FormLabel>
+                    <FormDescription>
+                      Enable two-factor authentication (2FA)
+                      for added security
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
